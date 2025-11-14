@@ -4,3 +4,6 @@ numpy
 ultralytics
 Pillow
 supervision
+imageio
+opencv-python
+torch
