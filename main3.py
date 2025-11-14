@@ -343,7 +343,20 @@ with tab_vid:
 
             # Read video with imageio from the temporary file
             reader = imageio.get_reader(tmp_video_path)
-            fps = reader.get_meta_data()["fps"]
+            meta = reader.get_meta_data()
+            fps = meta.get("fps", None)
+            
+            # If fps missing, manually calculate or default to 30 FPS
+            if fps is None:
+                try:
+                    # Some formats store fps as: 1 / time_base
+                    time_base = meta.get("fps_time_base", None)
+                    if time_base:
+                        fps = 1 / time_base
+                    else:
+                        fps = 30  # <- safe fallback
+                except:
+                    fps = 30  # final fallback
             output_path = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4").name
             writer = imageio.get_writer(output_path, fps=fps)
 
