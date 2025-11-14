@@ -1,0 +1,9 @@
+pandas
+streamlit
+YOLO
+Image
+numpy
+cv2
+supervision
+BytesIO
+tempfile
