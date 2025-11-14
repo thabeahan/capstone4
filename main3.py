@@ -3,7 +3,6 @@ import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
 import numpy as np
-import cv2
 import supervision as sv
 from io import BytesIO
 import tempfile
@@ -139,7 +138,7 @@ model = load_model()
 st.title("🚗 Vehicle Detection App")
 st.markdown("Upload an **image**  — the app detects **cars**, **buses**, and **vans**, then counts them automatically.")
 
-tab_img, tab_vid = st.tabs("📸 Image Detection")
+tab_img, tab_vid = st.tabs(["📸 Image Detection"])
 
 # ======================================
 # 📸 IMAGE DETECTION TAB
