@@ -1,7 +1,7 @@
+streamlit
 pandas
-YOLO
-Image
 numpy
-cv2
+ultralytics
+Pillow
+opencv-python-headless
 supervision
-BytesIO
