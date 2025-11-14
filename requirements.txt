@@ -1,9 +1,6 @@
-libgl1
-libglib2.0-0
 streamlit
 pandas
 numpy
 ultralytics
 Pillow
-opencv-python-headless
 supervision
