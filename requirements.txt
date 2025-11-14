@@ -1,9 +1,6 @@
-pandas
 streamlit
-YOLO
-Image
+pandas
 numpy
-cv2
+ultralytics
+Pillow
 supervision
-BytesIO
-tempfile
