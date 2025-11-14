@@ -3,6 +3,7 @@ import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
 import numpy as np
+import cv2
 import supervision as sv
 from io import BytesIO
 import tempfile
