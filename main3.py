@@ -8,10 +8,10 @@ from io import BytesIO
 import tempfile
 
 
-# === MUST BE FIRST STREAMLIT COMMAND ===
+# setting streamlit page
 st.set_page_config(page_title="Vehicle Detection App 🚘", layout="centered")
 
-# === STYLE & UI ENHANCEMENTS ===
+# push html for UI / template
 st.markdown( """
     <style>
 
@@ -56,7 +56,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# === NEW: Hover effect for the Browse files button inside uploader ===
 st.markdown("""
     <style>
     [data-testid="stFileUploader"] button:hover {
@@ -134,22 +133,23 @@ def load_model():
 
 model = load_model()
 
-# === STREAMLIT APP UI ===
+# Input title page and paragraph
 st.title("🚗 Vehicle Detection App")
 st.markdown("Upload an **image**  — the app detects **cars**, **buses**, and **vans**, then counts them automatically.")
 
 tab_img = st.tabs(["📸 Image Detection"])[0]
 
-# ======================================
-# 📸 IMAGE DETECTION TAB
-# ======================================
-with tab_img:  
+# IMAGE DETECTION TAB
+with tab_img:
+    # memunculkan box uploader image file
     uploaded_image = st.file_uploader("", type=["jpg", "jpeg", "png"],key="img_uploader")
+    # memunculkan interaktif slider untuk menentukan confidence threshold
     conf_threshold = st.slider("🎯 Confidence Threshold", 0.1, 1.0, 0.25, 0.05, key="img_conf")
 
     FRAME_WIDTH, FRAME_HEIGHT = 624, 400
     FRAME_COLOR = (200, 200, 200)
 
+    # resize input image (agar image yang muncul selalu dalam ukuran yang sama)
     def resize_with_padding(image: Image.Image, target_w: int, target_h: int, color=(200, 200, 200)):
         img_w, img_h = image.size
         scale = min(target_w / img_w, target_h / img_h)
@@ -159,15 +159,18 @@ with tab_img:
         new_img.paste(resized, ((target_w - new_w) // 2, (target_h - new_h) // 2))
         return new_img
 
+    # resize ouput image (agar image yang muncul selalu dalam ukuran yang sama) dan convert ke RGB
     if uploaded_image:
         image = Image.open(uploaded_image).convert("RGB")
         preview_img = resize_with_padding(image, FRAME_WIDTH, FRAME_HEIGHT, FRAME_COLOR)
         st.image(preview_img, caption="📥 Uploaded Image (scaled with padding)", width=FRAME_WIDTH)
-
+        
+        # tombol detect vehicle
         if st.button("🚀 Detect Vehicles", key="detect_img"):
             progress_text = st.empty()
             progress_text.markdown("🚗 **Detecting vehicles... please wait.**")
 
+            # proses detect vehicle dan anotasi
             try:
                 image_np = np.array(image)
                 results = model(image_np, conf=conf_threshold, verbose=False)[0]
@@ -190,7 +193,7 @@ with tab_img:
                 annotated_display = resize_with_padding(annotated_display, FRAME_WIDTH, FRAME_HEIGHT, FRAME_COLOR)
                 st.image(annotated_display, caption="📊 Detected Vehicles (scaled with padding)", width=FRAME_WIDTH, clamp=True)
 
-                # === Vehicle Count Table
+                # Perhitungan untuk jumlah masing2 class vehicle yang terdeteksi dan pembuatan table
                 class_names = model.names
                 counts = {}
                 for c in detections.class_id:
@@ -212,6 +215,7 @@ with tab_img:
                 else:
                     st.warning("No vehicles detected.")
 
+                # block code untuk save output image di server (sementara) dan tombol download
                 buf = BytesIO()
                 Image.fromarray(annotated).save(buf, format="PNG")
                 st.download_button("💾 Download Annotated Image", buf.getvalue(), "detected_vehicles.png", "image/png", key="download_img")
