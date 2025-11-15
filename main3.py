@@ -121,7 +121,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # === LOAD YOLO MODEL ===
-MODEL_PATH = "best_3c_40p40.pt"
+MODEL_PATH = "best_3c_25p100.pt"
 
 @st.cache_resource(show_spinner="Loading YOLO model...")
 def load_model():
