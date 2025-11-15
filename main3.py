@@ -171,7 +171,7 @@ with tab_img:
             try:
                 image_np = np.array(image)
                 results = model(image_np, conf=conf_threshold, verbose=False)[0]
-                detections = sv.Detections.from_ultralytics(results).with_nms()
+                detections = sv.Detections.from_ultralytics(results).with_nms(threshold=0.3, class_agnostic=True)
 
                 h, w = image_np.shape[:2]
                 scale_factor = np.sqrt((h * w) / (1280 * 720))
