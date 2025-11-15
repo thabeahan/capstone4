@@ -172,7 +172,7 @@ with tab_img:
             try:
                 image_np = np.array(image)
                 results = model(image_np, conf=conf_threshold, verbose=False)[0]
-                detections = sv.Detections.from_ultralytics(results).with_nms()
+                detections = sv.Detections.from_ultralytics(results).with_nms(threshold=0.3, class_agnostic=True)
 
                 h, w = image_np.shape[:2]
                 scale_factor = np.sqrt((h * w) / (1280 * 720))
@@ -264,7 +264,7 @@ with tab_vid:
 
                 # === Run detection on every frame ===
                 results = model(frame, conf=conf_threshold_vid, verbose=False)[0]
-                detections = sv.Detections.from_ultralytics(results)
+                detections = sv.Detections.from_ultralytics(results).with_nms(threshold=0.3, class_agnostic=True)
 
                 # === Update vehicle counts only every 3 frames ===
                 if frame_count % 3 == 0 or frame_count == 1:
@@ -330,4 +330,5 @@ with tab_vid:
                     key="download_vid"
                 )
     else:
+
         st.info("👆 Upload a video to start detection.")
